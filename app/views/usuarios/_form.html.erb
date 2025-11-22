@@ -1,0 +1,37 @@
+<div class="col-sm-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
+
+      <%= form_with model: usuario, local: true, html: { id: 'usuario_form', class: 'form' } do |f| %>
+
+        <% if usuario.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(usuario.errors.count, "erro") %> impediram o salvamento:</h2>
+            <ul>
+              <% usuario.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <label>Nome ou CPF:</label>
+          <%= f.autocomplete_field :autocomplete_display,
+                                   autocomplete_usuario_identificacao_login_usuarios_path,
+                                   class: 'form-control',
+                                   id: 'autocomplete',
+                                   id_element: '#identificacao_login_id',
+                                   min_length: 3,
+                                   delay: 500,
+                                   placeholder: 'Digite nome ou CPF' %>
+
+          <%= f.hidden_field :identificacao_login_id, id: 'identificacao_login_id' %>
+        </div>
+
+
+      <% end %>
+
+    </div>
+  </div>
+</div>

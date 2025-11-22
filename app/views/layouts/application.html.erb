@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang='pt-BR'>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta name='description' content='favor adicionar uma descrição'>
+    <title>Sistema UFF</title>
+
+
+    <%= csrf_meta_tags %>
+    <%= content_for :head %>
+
+    <%= javascript_pack_tag "application", "data-turbo-track": "reload" %>
+    <!-- template do projeto -->
+    <%= stylesheet_pack_tag "grill", "data-turbo-track": "reload" %>
+    <%= javascript_pack_tag  "grill", "data-turbo-track": "reload", defer: true %>
+
+
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

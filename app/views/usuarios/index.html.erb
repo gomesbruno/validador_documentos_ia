@@ -1,0 +1,17 @@
+<h1>Usuários</h1>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= render partial: 'table', locals: {usuarios: @usuarios, colunas: colunas} %>
+      </div>
+    </div>
+
+    <%= link_to new_usuario_path, class: "btn btn-success" do %>
+    <span>
+        <i class="fa fa-plus"></i>
+     </span>Novo Usuário
+    <% end %>
+  </div>
+</div>
