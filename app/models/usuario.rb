@@ -12,8 +12,9 @@ class Usuario < ApplicationRecord
       .where(identificacoes_login: {iduff: iduff})
   }
   scope :por_iduff_ou_nome, ->(term) {
-    joins(:identificacao_login)
-      .where('identificacoes_login.iduff LIKE ? OR identificacoes_login.nome LIKE ?', "%#{term}%", "%#{term}%")
+    joins(identificacao_login: :dados_identificacao)
+      .where('identificacoes_login.iduff LIKE :query OR identificacoes_login.nome LIKE :query OR dados_identificacoes.cpf LIKE :query',
+             query: "%#{term}%")
   }
   scope :por_identificacao_login_id, ->(id) {
     joins(:identificacao_login)
