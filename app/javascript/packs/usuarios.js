@@ -1,18 +1,5 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
-//
-// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
-// vendor/assets/javascripts directory can be referenced here using a relative path.
-//
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// compiled file. JavaScript code in this file should be added after the last require_* statement.
-//
-// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
-// about supported directives.
-//
-//-- AUTOCOMPLETE
-//= require jquery-ui/widgets/autocomplete
-//= require autocomplete-rails
+import $ from "jquery";
+import "jquery-ui/ui/widgets/autocomplete";
 
 $(document).ready(function () {
     $(':checkbox').on('change', function () {
@@ -50,22 +37,23 @@ $(document).ready(function () {
 });
 
 document.addEventListener('turbolinks:load', () => {
-  // ... aqui fica o que você já tem (autocomplete, sortable etc.)
+  const $input  = $('#autocomplete');
+  const $hidden = $('#identificacao_login_id');
 
-  const $input = $('#autocomplete');
-  const $form  = $('#identificacao_login_search_form');
+  if (!$input.length) return;
 
-  if ($input.length && $form.length) {
-    let lastValue = '';
+  const url = $input.data('autocomplete-url');
+  if (!url) return;
 
-    $input.on('keyup', function () {
-      const value = $(this).val();
-
-      // Só envia se tiver 3+ caracteres e mudou desde a última requisição
-      if (value.length >= 3 && value !== lastValue) {
-        lastValue = value;
-        $form.submit();
+  $input.autocomplete({
+    source(request, response) {
+      $.getJSON(url, { term: request.term }, response);
+    },
+    minLength: 3,
+    select(_event, ui) {
+      if ($hidden.length) {
+        $hidden.val(ui.item.id);
       }
-    });
-  }
+    }
+  });
 });

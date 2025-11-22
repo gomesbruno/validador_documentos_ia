@@ -13,6 +13,7 @@ import '../grill/js/scripts.js'
 
 // app/javascript/packs/grill.js
 import '../grill/scss/grill.scss';
+import './usuarios'
 
 
 // Se tiver JS do tema:
