@@ -1,6 +1,90 @@
 import $ from "jquery";
 import "jquery-ui/ui/widgets/autocomplete";
 
+// DataTables server-side cache (pipeline) helper
+// Based on the official DataTables example: https://datatables.net/examples/server_side/pipeline.html
+$.fn.dataTable.pipeline = function (opts) {
+  const conf = $.extend({
+    pages: 5,     // how many pages to cache
+    url: '',      // script url
+    data: null,   // function or object with parameters to send to the server
+    method: 'GET' // Ajax HTTP method
+  }, opts);
+
+  let cacheLower = -1;
+  let cacheUpper = null;
+  let cacheLastRequest = null;
+  let cacheLastJson = null;
+
+  return function (request, drawCallback, settings) {
+    let ajax = false;
+    const requestStart = request.start;
+    const draw = request.draw;
+    const requestEnd = requestStart + request.length;
+
+    if (settings.clearCache) {
+      ajax = true;
+      settings.clearCache = false;
+    } else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper
+      || JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order)
+      || JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns)
+      || JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)) {
+      ajax = true;
+    }
+
+    cacheLastRequest = $.extend(true, {}, request);
+
+    if (ajax) {
+      cacheLower = requestStart;
+      cacheUpper = requestStart + (request.length * conf.pages);
+      request.start = requestStart;
+      request.length = request.length * conf.pages;
+
+      if (typeof conf.data === 'function') {
+        const d = conf.data(request);
+        if (d) {
+          $.extend(request, d);
+        }
+      } else if ($.isPlainObject(conf.data)) {
+        $.extend(request, conf.data);
+      }
+
+      settings.jqXHR = $.ajax({
+        type: conf.method,
+        url: conf.url,
+        data: request,
+        dataType: 'json',
+        cache: false,
+        success(json) {
+          cacheLastJson = $.extend(true, {}, json);
+
+          if (cacheLower !== requestStart) {
+            json.data.splice(0, requestStart - cacheLower);
+          }
+          if (request.length >= -1) {
+            json.data.splice(request.length, json.data.length);
+          }
+
+          drawCallback(json);
+        }
+      });
+    } else {
+      const json = $.extend(true, {}, cacheLastJson);
+      json.draw = draw; // Update the echo for each response
+      json.data.splice(0, requestStart - cacheLower);
+      json.data.splice(request.length, json.data.length);
+
+      drawCallback(json);
+    }
+  };
+};
+
+$.fn.dataTable.Api.register('clearPipeline()', function () {
+  return this.iterator('table', function (settings) {
+    settings.clearCache = true;
+  });
+});
+
 $(document).ready(function () {
     $(':checkbox').on('change', function () {
         $('#enviar').prop('disabled', !$(':checkbox:checked').length);
