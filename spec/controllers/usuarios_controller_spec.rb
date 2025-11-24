@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsuariosController, type: :controller do
   let(:identificacao_login) { create(:identificacao_login) }
+  let(:perfil) { create(:perfil) }
 
   describe 'GET #index' do
     it 'retorna sucesso' do
@@ -14,10 +15,10 @@ RSpec.describe UsuariosController, type: :controller do
   describe 'POST #create' do
     it 'redireciona com notice retornado pelo serviço' do
       expect(UsuarioService).to receive(:criar_usuario)
-        .with(identificacao_login.id.to_s, ['1'])
+        .with(identificacao_login.id.to_s, [perfil.id.to_s])
         .and_return({ notice: 'Usuário criado com sucesso!' })
 
-      post :create, params: { usuario: { identificacao_login_id: identificacao_login.id, opcoes_perfil: ['1'] } }
+      post :create, params: { usuario: { identificacao_login_id: identificacao_login.id, opcoes_perfil: [perfil.id.to_s] } }
 
       expect(response).to redirect_to(usuarios_path)
       expect(flash[:notice]).to eq('Usuário criado com sucesso!')
@@ -26,13 +27,14 @@ RSpec.describe UsuariosController, type: :controller do
 
   describe 'PATCH #update' do
     let(:usuario) { create(:usuario, identificacao_login: identificacao_login) }
+    let(:perfil_atualizado) { create(:perfil) }
 
     it 'redireciona após atualizar perfis' do
       expect(UsuarioService).to receive(:modifica_perfil)
-        .with(usuario, ['2'])
+        .with(usuario, [perfil_atualizado.id.to_s])
         .and_return({ notice: 'Usuário modificado com sucesso!' })
 
-      patch :update, params: { id: usuario.id, usuario: { opcoes_perfil: ['2'] } }
+      patch :update, params: { id: usuario.id, usuario: { opcoes_perfil: [perfil_atualizado.id.to_s] } }
 
       expect(response).to redirect_to(usuarios_path)
       expect(flash[:notice]).to eq('Usuário modificado com sucesso!')

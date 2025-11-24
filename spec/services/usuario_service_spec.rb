@@ -35,4 +35,26 @@ RSpec.describe UsuarioService do
       expect(usuario.reload.perfis).to contain_exactly(perfil_assistente)
     end
   end
+
+  describe '.desativar_usuario' do
+    let(:usuario) { create(:usuario) }
+
+    it 'marca data de desativação e retorna notice' do
+      resposta = described_class.desativar_usuario(usuario)
+
+      expect(resposta[:notice]).to eq('Usuário desativado com sucesso!')
+      expect(usuario.reload.data_desativacao).to be_present
+    end
+  end
+
+  describe '.reativar_usuario' do
+    let(:usuario) { create(:usuario, data_desativacao: 1.day.ago) }
+
+    it 'remove data de desativação e retorna notice' do
+      resposta = described_class.reativar_usuario(usuario)
+
+      expect(resposta[:notice]).to eq('Usuário reativado com sucesso!')
+      expect(usuario.reload.data_desativacao).to be_nil
+    end
+  end
 end
