@@ -34,7 +34,8 @@ class UsuarioService < ApplicationService
   end
 
   def self.criar_novo_fiscal(identificacao_login)
-    return if usuario_fiscal_existe?(identificacao_login)
+    return if usuario_fiscal_existe?(identificacao_login.id)
+
     criar_usuario(identificacao_login.id, [Perfil.fiscal.first.id, Perfil.coordenador.first.id])
   end
 
@@ -66,8 +67,8 @@ class UsuarioService < ApplicationService
     end
   end
 
-  def self.usuario_fiscal_existe?(identificacao_login)
-    usuario = Usuario.por_identificacao_login_id(identificacao_login).first
+  def self.usuario_fiscal_existe?(identificacao_login_id)
+    usuario = Usuario.por_identificacao_login_id(identificacao_login_id).first
     return false unless usuario.present?
     perfis = usuario.perfis.pluck(:tipo).map(&:to_sym)
     usuario.present? && perfis.include?(:fiscal)
