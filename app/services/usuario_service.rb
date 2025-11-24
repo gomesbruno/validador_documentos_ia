@@ -19,11 +19,9 @@ class UsuarioService < ApplicationService
 
   def self.criar_usuario(identificacao_login_id, perfis_selecionados)
     transacional({notice: 'Usuário criado com sucesso!'}) do
-      Usuario.cria_usuario(identificacao.id)
-      # identificacao = Pub::IdentificacaoLogin.where(id: identificacao_login_id).first
-      # perfis_selecionados.each do |perfil|
-      #   Usuario.cria_usuario(identificacao.id, Perfil.find(perfil))
-      # end
+      usuario = Usuario.cria_usuario(identificacao_login_id)
+      associar_perfis usuario, perfis_selecionados if perfis_selecionados.present?
+      usuario
     end
   end
 
