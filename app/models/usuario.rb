@@ -2,6 +2,9 @@ class Usuario < ApplicationRecord
 
   belongs_to :identificacao_login, class_name: 'Pub::IdentificacaoLogin',inverse_of: :usuario
 
+  has_many :papeis, dependent: :destroy
+  has_many :perfis, through: :papeis
+
   validates :identificacao_login, presence: true, uniqueness: {message: 'Cadastro Inválido! Usuário já existe.'}
 
   delegate :email, to: :identificacao_login
