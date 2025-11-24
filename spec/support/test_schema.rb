@@ -17,6 +17,10 @@ RSpec.configure do |config|
         end
       end
 
+      unless ActiveRecord::Base.connection.column_exists?(:dados_identificacoes, :identificacao_login_id)
+        add_reference :dados_identificacoes, :identificacao_login, null: false
+      end
+
       unless ActiveRecord::Base.connection.table_exists?(:perfis)
         create_table :perfis do |t|
           t.string :tipo, null: false
