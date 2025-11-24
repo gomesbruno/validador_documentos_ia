@@ -1,4 +1,5 @@
 class Pub::IdentificacaoLogin < ActiveRecord::Base
+  self.table_name = 'identificacoes_login'
   has_one :dados_identificacao, class_name: 'Pub::DadosIdentificacao', foreign_key: :identificacao_login_id
   delegate :endereco_rua, :endereco_numero, :endereco_bairro, :endereco_cep, :cidade,
            :ddd_telefone, :telefone, :ddd_celular, :celular, :email, :identidade, :identidade_orgao, :cpf,
