@@ -42,13 +42,24 @@ RSpec.describe UsuariosController, type: :controller do
   describe 'DELETE #destroy' do
     let!(:usuario) { create(:usuario, identificacao_login: identificacao_login) }
 
-    it 'remove o usuario e redireciona' do
-      expect do
-        delete :destroy, params: { id: usuario.id }
-      end.to change(Usuario, :count).by(-1)
+    it 'desativa o usuario e redireciona' do
+      delete :destroy, params: { id: usuario.id }
 
       expect(response).to redirect_to(usuarios_url)
-      expect(flash[:notice]).to eq('Usuário foi deletado com sucesso')
+      expect(flash[:notice]).to eq('Usuário desativado com sucesso!')
+      expect(usuario.reload.data_desativacao).to be_present
+    end
+  end
+
+  describe 'PATCH #reativar' do
+    let!(:usuario) { create(:usuario, identificacao_login: identificacao_login, data_desativacao: Time.zone.now) }
+
+    it 'reativa o usuario e redireciona' do
+      patch :reativar, params: { id: usuario.id }
+
+      expect(response).to redirect_to(usuarios_url)
+      expect(flash[:notice]).to eq('Usuário reativado com sucesso!')
+      expect(usuario.reload.data_desativacao).to be_nil
     end
   end
 end

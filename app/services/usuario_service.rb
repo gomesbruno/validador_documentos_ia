@@ -38,6 +38,18 @@ class UsuarioService < ApplicationService
     criar_usuario(identificacao_login.id, [Perfil.fiscal.first.id, Perfil.coordenador.first.id])
   end
 
+  def self.desativar_usuario(usuario)
+    transacional({ notice: 'Usuário desativado com sucesso!' }) do
+      usuario.desativar!
+    end
+  end
+
+  def self.reativar_usuario(usuario)
+    transacional({ notice: 'Usuário reativado com sucesso!' }) do
+      usuario.reativar!
+    end
+  end
+
   private
 
   def self.associar_perfis(usuario, perfis)

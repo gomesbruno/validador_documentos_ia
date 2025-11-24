@@ -29,6 +29,27 @@
           <%= f.hidden_field :identificacao_login_id, id: 'identificacao_login_id' %>
         </div>
 
+        <div class="form-group">
+          <label>Perfis:</label>
+          <div class="row">
+            <% perfis.each do |descricao, id| %>
+              <div class="col-sm-4">
+                <div class="checkbox">
+                  <label>
+                    <%= check_box_tag 'usuario[opcoes_perfil][]', id, possui_perfil?(usuario, id), id: "perfil_#{id}" %>
+                    <%= descricao %>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.submit 'Salvar', class: 'btn btn-primary' %>
+          <%= link_to 'Cancelar', usuarios_path, class: 'btn btn-default' %>
+        </div>
+
 
       <% end %>
 

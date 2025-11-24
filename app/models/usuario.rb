@@ -10,6 +10,9 @@ class Usuario < ApplicationRecord
   delegate :email, to: :identificacao_login
   delegate :nome, :iduff, :autocomplete_display, :foto, to: :identificacao_login, allow_nil: true
 
+  scope :ativos, -> { where(data_desativacao: nil) }
+  scope :inativos, -> { where.not(data_desativacao: nil) }
+
   scope :por_iduff, ->(iduff) {
     joins(:identificacao_login)
       .where(identificacoes_login: {iduff: iduff})
@@ -56,6 +59,15 @@ class Usuario < ApplicationRecord
     usuario
   end
 
+  def ativo?
+    data_desativacao.nil?
+  end
 
+  def desativar!
+    update!(data_desativacao: Time.zone.now)
+  end
 
+  def reativar!
+    update!(data_desativacao: nil)
+  end
 end

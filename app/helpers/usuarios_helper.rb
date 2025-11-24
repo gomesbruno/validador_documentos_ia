@@ -4,13 +4,14 @@ module UsuariosHelper
   end
 
   def nome(usuario)
-    unless usuario.blank? do
-      usuario.identificacao_login.autocomplete_display
-    end
-    end
+    return if usuario.blank?
+
+    usuario.identificacao_login.autocomplete_display
   end
 
   def possui_perfil?(usuario, perfil_id)
-    usuario.perfis.pluck(:id).include?(perfil_id) ? true : false
+    return false if usuario.nil?
+
+    usuario.perfis.pluck(:id).include?(perfil_id)
   end
 end
