@@ -36,6 +36,30 @@ RSpec.describe UsuarioService do
     end
   end
 
+  describe '.criar_novo_fiscal' do
+    let(:identificacao_login) { create(:identificacao_login) }
+    let!(:perfil_fiscal) { create(:perfil, tipo: 'fiscal') }
+    let!(:perfil_coordenador) { create(:perfil, tipo: 'coordenador') }
+
+    it 'não cria novo usuário quando já existe fiscal' do
+      Usuario.cria_perfil(identificacao_login.id, perfil_fiscal)
+
+      expect do
+        described_class.criar_novo_fiscal(identificacao_login)
+      end.not_to change(Usuario, :count)
+    end
+
+    it 'cria usuário com perfis fiscal e coordenador quando inexistente' do
+      usuario = nil
+
+      expect do
+        usuario = described_class.criar_novo_fiscal(identificacao_login)
+      end.to change(Usuario, :count).by(1)
+
+      expect(usuario.perfis).to contain_exactly(perfil_fiscal, perfil_coordenador)
+    end
+  end
+
   describe '.desativar_usuario' do
     let(:usuario) { create(:usuario) }
 
