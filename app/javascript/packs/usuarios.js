@@ -103,13 +103,16 @@ $(document).ready(function () {
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         columns: [
             {"data": "nome"},
+            {"data": "cpf"},
             {"data": "perfis"},
+            {"data": "status"},
             {"data": "acoes"}
         ],
         columnDefs: [
             {
-                targets: [1, 2],
-                orderable: false
+                targets: [2, 3, 4],
+                orderable: false,
+                searchable: false
             }
         ],
         "ajax": $.fn.dataTable.pipeline({
@@ -134,6 +137,7 @@ document.addEventListener('turbolinks:load', () => {
       $.getJSON(url, { term: request.term }, response);
     },
     minLength: 3,
+    delay: 500,
     select(_event, ui) {
       if ($hidden.length) {
         $hidden.val(ui.item.id);

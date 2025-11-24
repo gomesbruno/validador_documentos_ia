@@ -1,0 +1,15 @@
+<div class="btn-group" role="group">
+  <%= link_to edit_usuario_path(usuario), class: 'btn btn-primary btn-xs' do %>
+    <i class="fa fa-pencil"></i>
+  <% end %>
+
+  <% if usuario.ativo? %>
+    <%= link_to usuario_path(usuario), method: :delete, data: { confirm: 'Deseja desativar este usuário?' }, class: 'btn btn-warning btn-xs' do %>
+      <i class="fa fa-ban"></i>
+    <% end %>
+  <% else %>
+    <%= link_to reativar_usuario_path(usuario), method: :patch, class: 'btn btn-success btn-xs' do %>
+      <i class="fa fa-undo"></i>
+    <% end %>
+  <% end %>
+</div>
