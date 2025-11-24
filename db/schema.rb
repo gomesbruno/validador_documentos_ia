@@ -10,7 +10,87 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_10_031028) do
+ActiveRecord::Schema.define(version: 2025_11_10_032000) do
+
+  create_table "cidades", charset: "utf8mb4", force: :cascade do |t|
+    t.string "nome"
+    t.bigint "estado_id"
+    t.integer "codigo_ibge"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["estado_id"], name: "index_cidades_on_estado_id"
+  end
+
+  create_table "dados_identificacoes", charset: "utf8mb4", force: :cascade do |t|
+    t.string "nome_abreviado"
+    t.string "iduff_mail"
+    t.bigint "pais_nacionalidade_id"
+    t.bigint "nacionalidade_id"
+    t.bigint "endereco_cidade_id"
+    t.bigint "identidade_estado_id"
+    t.bigint "naturalidade_estado_id"
+    t.bigint "identificacao_login_id"
+    t.string "endereco_rua"
+    t.string "endereco_numero"
+    t.string "endereco_bairro"
+    t.string "endereco_cep"
+    t.string "ddd_telefone"
+    t.string "telefone"
+    t.string "ddd_celular"
+    t.string "celular"
+    t.string "email"
+    t.string "identidade"
+    t.string "identidade_orgao"
+    t.string "cpf"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["endereco_cidade_id"], name: "index_dados_identificacoes_on_endereco_cidade_id"
+    t.index ["identidade_estado_id"], name: "index_dados_identificacoes_on_identidade_estado_id"
+    t.index ["identificacao_login_id"], name: "index_dados_identificacoes_on_identificacao_login_id"
+    t.index ["nacionalidade_id"], name: "index_dados_identificacoes_on_nacionalidade_id"
+    t.index ["naturalidade_estado_id"], name: "index_dados_identificacoes_on_naturalidade_estado_id"
+    t.index ["pais_nacionalidade_id"], name: "index_dados_identificacoes_on_pais_nacionalidade_id"
+  end
+
+  create_table "estados", charset: "utf8mb4", force: :cascade do |t|
+    t.string "nome"
+    t.string "sigla"
+    t.bigint "pais_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["pais_id"], name: "index_estados_on_pais_id"
+  end
+
+  create_table "identificacoes_login", charset: "utf8mb4", force: :cascade do |t|
+    t.string "nome"
+    t.string "iduff"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "papeis", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "usuario_id"
+    t.bigint "perfil_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["perfil_id"], name: "index_papeis_on_perfil_id"
+    t.index ["usuario_id"], name: "index_papeis_on_usuario_id"
+  end
+
+  create_table "paises", charset: "utf8mb4", force: :cascade do |t|
+    t.string "nome"
+    t.string "sigla"
+    t.integer "codigo"
+    t.string "nacionalidade"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "perfis", charset: "utf8mb4", force: :cascade do |t|
+    t.string "tipo"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "usuarios", charset: "latin1", force: :cascade do |t|
     t.bigint "user_id", null: false
